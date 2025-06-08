@@ -10,7 +10,7 @@ const droughtDates = [
 // Initialize Leaflet map
 const map = L.map('droughtMap').setView([37.8, -96], 4);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 6
+  maxZoom: 10
 }).addTo(map);
 
 // Load state outlines
