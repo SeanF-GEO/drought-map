@@ -7,83 +7,101 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&display=swap" rel="stylesheet" />
 
-  <style>
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: #f8f9fb;
-      margin: 0;
-      padding: 40px 20px;
-      max-width: 960px;
-      color: #222;
-      margin: auto;
-    }
+ <style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&display=swap');
 
-    h2 {
-      text-align: center;
-      font-size: 2.4rem;
-      font-weight: 600;
-      margin-bottom: 28px;
-      color: #2b2b2b;
-    }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+    padding: 40px 20px;
+    max-width: 960px;
+    color: #222;
+    margin: auto;
+  }
 
-    #controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
+  h2 {
+    text-align: center;
+    font-size: 2.3rem;
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: #1a1a1a;
+  }
 
-    label {
-      font-weight: 600;
-      font-size: 1rem;
-    }
+  #controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 25px;
+  }
 
-    select {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 1rem;
-      padding: 10px 14px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      background: white;
-      color: #333;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-      transition: all 0.2s ease;
-    }
+  label {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #444;
+  }
 
-    select:hover {
-      border-color: #aaa;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    }
+  select {
+    appearance: none;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 12px 38px 12px 16px;
+    font-size: 1rem;
+    font-family: inherit;
+    color: #333;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+  }
 
-    #droughtMap {
-      height: 600px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    }
+  select:hover {
+    border-color: #999;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    transform: translateY(-1px);
+  }
 
-    .legend {
-      background: white;
-      padding: 10px 14px;
-      font-size: 14px;
-      line-height: 1.6;
-      color: #222;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
+  select:focus {
+    outline: none;
+    border-color: #0077ff;
+    box-shadow: 0 0 0 3px rgba(0,119,255,0.2);
+  }
 
-    .legend i {
-      width: 16px;
-      height: 16px;
-      float: left;
-      margin-right: 8px;
-      margin-top: 3px;
-      opacity: 0.8;
-      border-radius: 2px;
-    }
-  </style>
+  #droughtMap {
+    height: 600px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  }
+
+  .legend {
+    background: white;
+    padding: 12px 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #222;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  .legend i {
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-right: 8px;
+    margin-top: 3px;
+    opacity: 0.8;
+    border-radius: 2px;
+  }
+</style>
+
 </head>
 
 <body>
