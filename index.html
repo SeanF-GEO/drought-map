@@ -2,87 +2,98 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Drought Monitor Viewer</title>
+  <title>💧 Drought Monitor Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<style>
-  body {
-    font-family: 'Segoe UI', Roboto, sans-serif;
-    background: #f9f9f9;
-    margin: 0;
-    padding: 40px;
-    color: #222;
-    max-width: 960px;
-    margin: auto;
-  }
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&display=swap" rel="stylesheet" />
 
-  h2 {
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 20px;
-    color: #444;
-  }
+  <style>
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f8f9fb;
+      margin: 0;
+      padding: 40px 20px;
+      max-width: 960px;
+      color: #222;
+      margin: auto;
+    }
 
-  #controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
+    h2 {
+      text-align: center;
+      font-size: 2.4rem;
+      font-weight: 600;
+      margin-bottom: 28px;
+      color: #2b2b2b;
+    }
 
-  select {
-    font-size: 1rem;
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background-color: white;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.05);
-  }
+    #controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
 
-  label {
-    font-weight: bold;
-    font-size: 0.95rem;
-  }
+    label {
+      font-weight: 600;
+      font-size: 1rem;
+    }
 
-  #droughtMap {
-    height: 600px;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-  }
+    select {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      padding: 10px 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: white;
+      color: #333;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+    }
 
-  .legend {
-    background: white;
-    padding: 10px 14px;
-    font-size: 14px;
-    line-height: 1.6;
-    color: #222;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
+    select:hover {
+      border-color: #aaa;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
 
-  .legend i {
-    width: 16px;
-    height: 16px;
-    float: left;
-    margin-right: 8px;
-    margin-top: 3px;
-    opacity: 0.8;
-    border-radius: 2px;
-  }
-</style>
+    #droughtMap {
+      height: 600px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
 
+    .legend {
+      background: white;
+      padding: 10px 14px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #222;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .legend i {
+      width: 16px;
+      height: 16px;
+      float: left;
+      margin-right: 8px;
+      margin-top: 3px;
+      opacity: 0.8;
+      border-radius: 2px;
+    }
+  </style>
 </head>
+
 <body>
-  <h2>Drought Monitor Viewer</h2>
+  <h2>💧 Drought Monitor Viewer</h2>
 
   <div id="controls">
-    <label for="yearSelect"><strong>Year:</strong></label>
+    <label for="yearSelect">Year:</label>
     <select id="yearSelect"></select>
 
-    <label for="monthSelect"><strong>Month:</strong></label>
+    <label for="monthSelect">Month:</label>
     <select id="monthSelect"></select>
   </div>
 
