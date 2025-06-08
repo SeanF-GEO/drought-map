@@ -63,22 +63,35 @@ const yearSelect = document.getElementById('yearSelect');
 const monthSelect = document.getElementById('monthSelect');
 
 // Fill year options
-const years = [...new Set(droughtDates.map(d => d.substring(0, 4)))];
-years.forEach(y => {
+// Manually add years from 2020 to 2025
+['2020','2021','2022','2023','2024','2025'].forEach(y => {
   const opt = document.createElement('option');
   opt.value = y;
   opt.textContent = y;
   yearSelect.appendChild(opt);
 });
 
-// Fill month options (01–12)
-const months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
-months.forEach(m => {
+// Add months 01–12
+[
+  { val: '01', name: 'January' },
+  { val: '02', name: 'February' },
+  { val: '03', name: 'March' },
+  { val: '04', name: 'April' },
+  { val: '05', name: 'May' },
+  { val: '06', name: 'June' },
+  { val: '07', name: 'July' },
+  { val: '08', name: 'August' },
+  { val: '09', name: 'September' },
+  { val: '10', name: 'October' },
+  { val: '11', name: 'November' },
+  { val: '12', name: 'December' }
+].forEach(m => {
   const opt = document.createElement('option');
-  opt.value = m;
-  opt.textContent = m;
+  opt.value = m.val;
+  opt.textContent = m.name;
   monthSelect.appendChild(opt);
 });
+
 
 // Handle changes
 function handleSelectChange() {
