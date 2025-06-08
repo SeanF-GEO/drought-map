@@ -7,24 +7,22 @@ const droughtDates = [
   '20250107','20250204','20250304','20250401','20250506','20250603'
 ];
 
+// Initialize Leaflet map
 const map = L.map('droughtMap').setView([37.8, -96], 4);
-
-// Base map
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 6
 }).addTo(map);
 
-// State boundaries
+// Load state outlines
 fetch('data/48states.geojson')
   .then(res => res.json())
-  .then(states => {
-    L.geoJSON(states, {
+  .then(data => {
+    L.geoJSON(data, {
       style: { color: '#333', weight: 1, fillOpacity: 0 }
     }).addTo(map);
   });
 
-let droughtLayer;
-
+// Color function by DM level
 function getColor(dm) {
   switch (dm) {
     case 0: return '#ffff00'; // D0
@@ -36,34 +34,41 @@ function getColor(dm) {
   }
 }
 
-function loadDroughtByDate(dateStr) {
-  if (!droughtDates.includes(dateStr)) return;
+let droughtLayer;
 
-  if (droughtLayer) map.removeLayer(droughtLayer);
+// Load drought GeoJSON by full date
+function loadDroughtByDate(dateStr) {
+  if (!droughtDates.includes(dateStr)) {
+    alert(`No data for ${dateStr}`);
+    return;
+  }
+
+  if (droughtLayer) {
+    map.removeLayer(droughtLayer);
+  }
 
   fetch(`data/USDM_${dateStr}.geojson`)
     .then(res => res.json())
     .then(data => {
       droughtLayer = L.geoJSON(data, {
-        style: feature => ({
-          color: '#444',
+        style: f => ({
+          fillColor: getColor(Number(f.properties.DM)),
+          color: '#333',
           weight: 0.5,
-          fillColor: getColor(Number(feature.properties.DM)),
           fillOpacity: 0.7
         }),
-        onEachFeature: (feature, layer) => {
-          layer.bindPopup(`Intensity: D${feature.properties.DM}`);
+        onEachFeature: (f, layer) => {
+          layer.bindPopup(`Drought Category: D${f.properties.DM}`);
         }
       }).addTo(map);
     });
 }
 
-// Set up dropdowns
+// Setup dropdowns
 const yearSelect = document.getElementById('yearSelect');
 const monthSelect = document.getElementById('monthSelect');
 
-// Fill year options
-// Manually add years from 2020 to 2025
+// Hardcoded year options
 ['2020','2021','2022','2023','2024','2025'].forEach(y => {
   const opt = document.createElement('option');
   opt.value = y;
@@ -71,7 +76,7 @@ const monthSelect = document.getElementById('monthSelect');
   yearSelect.appendChild(opt);
 });
 
-// Add months 01–12
+// Month options
 [
   { val: '01', name: 'January' },
   { val: '02', name: 'February' },
@@ -92,22 +97,29 @@ const monthSelect = document.getElementById('monthSelect');
   monthSelect.appendChild(opt);
 });
 
-
-// Handle changes
+// Handle dropdown changes
 function handleSelectChange() {
   const year = yearSelect.value;
   const month = monthSelect.value;
+  if (!year || !month) return;
+
   const match = droughtDates.find(d => d.startsWith(`${year}${month}`));
-  if (match) loadDroughtByDate(match);
+  if (match) {
+    loadDroughtByDate(match);
+  } else {
+    alert(`No data found for ${year}-${month}`);
+  }
 }
 
 yearSelect.addEventListener('change', handleSelectChange);
 monthSelect.addEventListener('change', handleSelectChange);
 
-// Initial load
+// Set default selection (latest date available)
+yearSelect.value = '2025';
+monthSelect.value = '06';
 handleSelectChange();
 
-// Legend
+// Add legend
 const legend = L.control({ position: 'bottomright' });
 legend.onAdd = function () {
   const div = L.DomUtil.create('div', 'info legend');
