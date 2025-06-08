@@ -5,39 +5,75 @@
   <title>Drought Monitor Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      max-width: 960px;
-    }
-    #controls {
-      margin-bottom: 10px;
-    }
-    select {
-      font-size: 1.1em;
-      padding: 5px 8px;
-      margin-right: 10px;
-    }
-    #droughtMap {
-      height: 600px;
-      border: 1px solid #ccc;
-    }
-    .legend {
-      background: white;
-      padding: 6px 10px;
-      font-size: 14px;
-      line-height: 1.5;
-      color: #333;
-    }
-    .legend i {
-      width: 18px;
-      height: 18px;
-      float: left;
-      margin-right: 8px;
-      opacity: 0.7;
-    }
-  </style>
+<style>
+  body {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background: #f9f9f9;
+    margin: 0;
+    padding: 40px;
+    color: #222;
+    max-width: 960px;
+    margin: auto;
+  }
+
+  h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #444;
+  }
+
+  #controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  select {
+    font-size: 1rem;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: white;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.05);
+  }
+
+  label {
+    font-weight: bold;
+    font-size: 0.95rem;
+  }
+
+  #droughtMap {
+    height: 600px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  }
+
+  .legend {
+    background: white;
+    padding: 10px 14px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #222;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .legend i {
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-right: 8px;
+    margin-top: 3px;
+    opacity: 0.8;
+    border-radius: 2px;
+  }
+</style>
+
 </head>
 <body>
   <h2>Drought Monitor Viewer</h2>
