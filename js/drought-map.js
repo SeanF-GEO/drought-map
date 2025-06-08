@@ -9,9 +9,9 @@ const droughtDates = [
 
 const map = L.map('droughtMap').setView([37.8, -96], 4);
 
-// Base layer
+// Base map
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 6,
+  maxZoom: 6
 }).addTo(map);
 
 // State boundaries
@@ -25,27 +25,65 @@ fetch('data/48states.geojson')
 
 let droughtLayer;
 
+function getColor(dm) {
+  switch (dm) {
+    case 0: return '#ffff00'; // D0 - yellow
+    case 1: return '#fcd37f'; // D1 - light orange
+    case 2: return '#ffaa00'; // D2 - orange
+    case 3: return '#e60000'; // D3 - red
+    case 4: return '#730000'; // D4 - dark red
+    default: return '#cccccc'; // unknown
+  }
+}
+
 function loadDrought(index) {
   const date = droughtDates[index];
   document.getElementById('dateLabel').textContent = `Date: ${date}`;
-  if (droughtLayer) map.removeLayer(droughtLayer);
+
+  if (droughtLayer) {
+    map.removeLayer(droughtLayer);
+  }
 
   fetch(`data/USDM_${date}.geojson`)
     .then(res => res.json())
     .then(data => {
       droughtLayer = L.geoJSON(data, {
-        style: {
-          color: '#cc0000',
+        style: feature => ({
+          color: '#444',
           weight: 0.5,
-          fillOpacity: 0.4
+          fillColor: getColor(Number(feature.properties.DM)),
+          fillOpacity: 0.7
+        }),
+        onEachFeature: (feature, layer) => {
+          layer.bindPopup(`Intensity: D${feature.properties.DM}`);
         }
       }).addTo(map);
     });
 }
 
 const slider = document.getElementById('dateSlider');
-slider.addEventListener('input', () => loadDrought(slider.value));
 slider.max = droughtDates.length - 1;
+slider.addEventListener('input', () => loadDrought(slider.value));
 
 // Initial load
 loadDrought(0);
+
+// Legend
+const legend = L.control({ position: 'bottomright' });
+legend.onAdd = function () {
+  const div = L.DomUtil.create('div', 'info legend');
+  const levels = [0, 1, 2, 3, 4];
+  const labels = [
+    'D0 - Abnormally Dry',
+    'D1 - Moderate Drought',
+    'D2 - Severe Drought',
+    'D3 - Extreme Drought',
+    'D4 - Exceptional Drought'
+  ];
+  div.innerHTML = '<b>Drought Intensity</b><br>';
+  levels.forEach((d, i) => {
+    div.innerHTML += `<i style="background:${getColor(d)}"></i> ${labels[i]}<br>`;
+  });
+  return div;
+};
+legend.addTo(map);
