@@ -25,11 +25,11 @@ fetch('data/48states.geojson')
 // Color function by DM level
 function getColor(dm) {
   switch (dm) {
-    case 0: return '#ffff00';
-    case 1: return '#fcd37f';
-    case 2: return '#ffaa00';
-    case 3: return '#e60000';
-    case 4: return '#730000';
+    case 0: return '#F3A365';
+    case 1: return '#EE771B';
+    case 2: return '#E32510';
+    case 3: return '#721308';
+    case 4: return '#390600';
     default: return '#cccccc';
   }
 }
