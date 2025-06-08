@@ -26,25 +26,22 @@ fetch('data/48states.geojson')
 let droughtLayer;
 
 function getColor(dm) {
-  switch (DM) {
-    case 0: return '#ffff00'; // D0 - yellow
-    case 1: return '#fcd37f'; // D1 - light orange
-    case 2: return '#ffaa00'; // D2 - orange
-    case 3: return '#e60000'; // D3 - red
-    case 4: return '#730000'; // D4 - dark red
-    default: return '#cccccc'; // unknown
+  switch (dm) {
+    case 0: return '#ffff00'; // D0
+    case 1: return '#fcd37f'; // D1
+    case 2: return '#ffaa00'; // D2
+    case 3: return '#e60000'; // D3
+    case 4: return '#730000'; // D4
+    default: return '#cccccc';
   }
 }
 
-function loadDrought(index) {
-  const date = droughtDates[index];
-  document.getElementById('dateLabel').textContent = `Date: ${date}`;
+function loadDroughtByDate(dateStr) {
+  if (!droughtDates.includes(dateStr)) return;
 
-  if (droughtLayer) {
-    map.removeLayer(droughtLayer);
-  }
+  if (droughtLayer) map.removeLayer(droughtLayer);
 
-  fetch(`data/USDM_${date}.geojson`)
+  fetch(`data/USDM_${dateStr}.geojson`)
     .then(res => res.json())
     .then(data => {
       droughtLayer = L.geoJSON(data, {
@@ -61,12 +58,41 @@ function loadDrought(index) {
     });
 }
 
-const slider = document.getElementById('dateSlider');
-slider.max = droughtDates.length - 1;
-slider.addEventListener('input', () => loadDrought(slider.value));
+// Set up dropdowns
+const yearSelect = document.getElementById('yearSelect');
+const monthSelect = document.getElementById('monthSelect');
+
+// Fill year options
+const years = [...new Set(droughtDates.map(d => d.substring(0, 4)))];
+years.forEach(y => {
+  const opt = document.createElement('option');
+  opt.value = y;
+  opt.textContent = y;
+  yearSelect.appendChild(opt);
+});
+
+// Fill month options (01–12)
+const months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+months.forEach(m => {
+  const opt = document.createElement('option');
+  opt.value = m;
+  opt.textContent = m;
+  monthSelect.appendChild(opt);
+});
+
+// Handle changes
+function handleSelectChange() {
+  const year = yearSelect.value;
+  const month = monthSelect.value;
+  const match = droughtDates.find(d => d.startsWith(`${year}${month}`));
+  if (match) loadDroughtByDate(match);
+}
+
+yearSelect.addEventListener('change', handleSelectChange);
+monthSelect.addEventListener('change', handleSelectChange);
 
 // Initial load
-loadDrought(0);
+handleSelectChange();
 
 // Legend
 const legend = L.control({ position: 'bottomright' });
