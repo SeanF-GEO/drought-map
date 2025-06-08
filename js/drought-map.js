@@ -25,18 +25,17 @@ fetch('data/48states.geojson')
 // Color function by DM level
 function getColor(dm) {
   switch (dm) {
-    case 0: return '#ffff00'; // D0
-    case 1: return '#fcd37f'; // D1
-    case 2: return '#ffaa00'; // D2
-    case 3: return '#e60000'; // D3
-    case 4: return '#730000'; // D4
+    case 0: return '#ffff00';
+    case 1: return '#fcd37f';
+    case 2: return '#ffaa00';
+    case 3: return '#e60000';
+    case 4: return '#730000';
     default: return '#cccccc';
   }
 }
 
 let droughtLayer;
 
-// Load drought GeoJSON by full date
 function loadDroughtByDate(dateStr) {
   if (!droughtDates.includes(dateStr)) {
     alert(`No data for ${dateStr}`);
@@ -68,7 +67,7 @@ function loadDroughtByDate(dateStr) {
 const yearSelect = document.getElementById('yearSelect');
 const monthSelect = document.getElementById('monthSelect');
 
-// Hardcoded year options
+// Add years
 ['2020','2021','2022','2023','2024','2025'].forEach(y => {
   const opt = document.createElement('option');
   opt.value = y;
@@ -76,7 +75,7 @@ const monthSelect = document.getElementById('monthSelect');
   yearSelect.appendChild(opt);
 });
 
-// Month options
+// Add months
 [
   { val: '01', name: 'January' },
   { val: '02', name: 'February' },
@@ -97,7 +96,7 @@ const monthSelect = document.getElementById('monthSelect');
   monthSelect.appendChild(opt);
 });
 
-// Handle dropdown changes
+// Dropdown change handler
 function handleSelectChange() {
   const year = yearSelect.value;
   const month = monthSelect.value;
@@ -114,12 +113,12 @@ function handleSelectChange() {
 yearSelect.addEventListener('change', handleSelectChange);
 monthSelect.addEventListener('change', handleSelectChange);
 
-// Set default selection (latest date available)
-yearSelect.value = '2025';
-monthSelect.value = '06';
+// Initial default load (first valid entry)
+yearSelect.value = '2020';
+monthSelect.value = '01';
 handleSelectChange();
 
-// Add legend
+// Legend
 const legend = L.control({ position: 'bottomright' });
 legend.onAdd = function () {
   const div = L.DomUtil.create('div', 'info legend');
