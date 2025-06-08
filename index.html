@@ -11,21 +11,45 @@
       margin: 20px;
       max-width: 960px;
     }
+    #controls {
+      margin-bottom: 10px;
+    }
+    select {
+      font-size: 1.1em;
+      padding: 5px 8px;
+      margin-right: 10px;
+    }
     #droughtMap {
       height: 600px;
-      margin-top: 10px;
       border: 1px solid #ccc;
     }
-    #dateLabel {
-      font-weight: bold;
-      margin-left: 10px;
+    .legend {
+      background: white;
+      padding: 6px 10px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #333;
+    }
+    .legend i {
+      width: 18px;
+      height: 18px;
+      float: left;
+      margin-right: 8px;
+      opacity: 0.7;
     }
   </style>
 </head>
 <body>
-  <h2>Drought Monitor (First Week of Each Month)</h2>
-  <input type="range" id="dateSlider" min="0" max="65" value="0">
-  <span id="dateLabel"></span>
+  <h2>Drought Monitor Viewer</h2>
+
+  <div id="controls">
+    <label for="yearSelect"><strong>Year:</strong></label>
+    <select id="yearSelect"></select>
+
+    <label for="monthSelect"><strong>Month:</strong></label>
+    <select id="monthSelect"></select>
+  </div>
+
   <div id="droughtMap"></div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
