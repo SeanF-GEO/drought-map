@@ -26,7 +26,7 @@ fetch('data/48states.geojson')
 let droughtLayer;
 
 function getColor(dm) {
-  switch (dm) {
+  switch (DM) {
     case 0: return '#ffff00'; // D0 - yellow
     case 1: return '#fcd37f'; // D1 - light orange
     case 2: return '#ffaa00'; // D2 - orange
