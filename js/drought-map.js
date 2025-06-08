@@ -7,13 +7,17 @@ const droughtDates = [
   '20250107','20250204','20250304','20250401','20250506','20250603'
 ];
 
-// Initialize Leaflet map
-const map = L.map('droughtMap').setView([37.8, -96], 4);
+// 🌎 Initialize Leaflet map with full zoom capability
+const map = L.map('droughtMap', {
+  zoomControl: true
+}).setView([37.8, -96], 5); // You can change this to your town’s coordinates
+
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 10
+  maxZoom: 19, // 🚀 Now you can zoom in all the way to street level
+  attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// Load state outlines
+// 🗺️ Load state outlines
 fetch('data/48states.geojson')
   .then(res => res.json())
   .then(data => {
@@ -22,20 +26,20 @@ fetch('data/48states.geojson')
     }).addTo(map);
   });
 
-// Color function by DM level
+// 🎨 Get drought color by DM level
 function getColor(dm) {
-  switch (dm) {
-    case 0: return '#F3A365';
-    case 1: return '#EE771B';
-    case 2: return '#E32510';
-    case 3: return '#721308';
-    case 4: return '#390600';
-    default: return '#cccccc';
-  }
+  return {
+    0: '#F3A365',
+    1: '#EE771B',
+    2: '#E32510',
+    3: '#721308',
+    4: '#390600'
+  }[dm] || '#cccccc';
 }
 
 let droughtLayer;
 
+// 🔁 Load and display drought GeoJSON by date
 function loadDroughtByDate(dateStr) {
   if (!droughtDates.includes(dateStr)) {
     alert(`No data for ${dateStr}`);
@@ -63,7 +67,7 @@ function loadDroughtByDate(dateStr) {
     });
 }
 
-// Setup dropdowns
+// 📅 Populate dropdowns
 const yearSelect = document.getElementById('yearSelect');
 const monthSelect = document.getElementById('monthSelect');
 
@@ -96,12 +100,10 @@ const monthSelect = document.getElementById('monthSelect');
   monthSelect.appendChild(opt);
 });
 
-// Dropdown change handler
+// 🧠 Handle dropdown changes
 function handleSelectChange() {
   const year = yearSelect.value;
   const month = monthSelect.value;
-  if (!year || !month) return;
-
   const match = droughtDates.find(d => d.startsWith(`${year}${month}`));
   if (match) {
     loadDroughtByDate(match);
@@ -113,12 +115,12 @@ function handleSelectChange() {
 yearSelect.addEventListener('change', handleSelectChange);
 monthSelect.addEventListener('change', handleSelectChange);
 
-// Initial default load (first valid entry)
+// 📦 Load default on startup
 yearSelect.value = '2020';
 monthSelect.value = '01';
 handleSelectChange();
 
-// Legend
+// 🧭 Add legend
 const legend = L.control({ position: 'bottomright' });
 legend.onAdd = function () {
   const div = L.DomUtil.create('div', 'info legend');
