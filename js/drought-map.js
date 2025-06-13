@@ -29,11 +29,11 @@ fetch('data/48states.geojson')
 // 🎨 Get drought color by DM level
 function getColor(dm) {
   return {
-    0: '#F3A365',
-    1: '#EE771B',
-    2: '#E32510',
-    3: '#721308',
-    4: '#390600'
+    0: '#FFF500',
+    1: '#FFA500',
+    2: '#FF0000',
+    3: '#870000',
+    4: '#390000'
   }[dm] || '#cccccc';
 }
 
