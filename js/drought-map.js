@@ -209,10 +209,72 @@ function updateChart() {
   const ctx = document.getElementById('chartCanvas').getContext('2d');
   if (droughtChart) droughtChart.destroy();
 
-  if (selectedCounties.length === 0) {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    return;
-  }
+ if (selectedCounties.length === 0) {
+  droughtChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: []
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          min: 0,
+          max: 4,
+          ticks: {
+            stepSize: 1,
+            callback: v => Number.isInteger(v) ? `D${v}` : '',
+            color: '#435239',
+            font: { size: 16, weight: 'bold' }
+          },
+          title: {
+            display: true,
+            text: 'Drought Intensity',
+            color: '#435239',
+            font: { size: 18 }
+          },
+          grid: {
+            color: '#43523944'
+          }
+        },
+        x: {
+          ticks: {
+            color: '#435239',
+            font: { size: 14 }
+          },
+          title: {
+            display: true,
+            text: 'Date',
+            color: '#435239',
+            font: { size: 18 }
+          },
+          grid: {
+            color: '#43523944'
+          }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false }
+      }
+    },
+    plugins: [{
+      id: 'customCanvasBackground',
+      beforeDraw: (chart) => {
+        const ctx = chart.canvas.getContext('2d');
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-over';
+        ctx.fillStyle = '#ffe8c2';
+        ctx.fillRect(0, 0, chart.width, chart.height);
+        ctx.restore();
+      }
+    }]
+  });
+  return;
+}
+
 
   droughtChart = new Chart(ctx, {
     type: 'line',
