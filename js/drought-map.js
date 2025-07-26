@@ -225,7 +225,7 @@ function updateChart() {
         backgroundColor: getStyledChartColor(idx, 0.2),
         spanGaps: true,
         tension: 0.35,
-        borderWidth: 2,
+        borderWidth: 3,
         pointRadius: 3
       }))
     },
