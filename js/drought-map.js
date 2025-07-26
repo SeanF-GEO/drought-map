@@ -207,15 +207,19 @@ function getCountyDM(feature) {
   return {labels, data};
 }
 
-// Update or create Chart.js chart
 function updateChart() {
   const ctx = document.getElementById('chartCanvas').getContext('2d');
+  
   if (droughtChart) droughtChart.destroy();
 
   if (selectedCounties.length === 0) {
-    ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     return;
   }
+
+  // Add a background color to canvas
+  Chart.defaults.color = '#ffe8c2';
+  Chart.defaults.font.family = 'DM Sans';
 
   droughtChart = new Chart(ctx, {
     type: 'line',
@@ -224,26 +228,81 @@ function updateChart() {
       datasets: selectedCounties.map((county, idx) => ({
         label: county.name,
         data: county.data.data,
-        borderColor: getChartColor(idx),
-        backgroundColor: getChartColor(idx,0.3),
-        spanGaps: true
+        borderColor: getStyledChartColor(idx),
+        backgroundColor: getStyledChartColor(idx, 0.4),
+        pointBackgroundColor: getStyledChartColor(idx),
+        tension: 0.2,
+        spanGaps: true,
+        borderWidth: 3,
+        pointRadius: 4,
+        pointHoverRadius: 6,
       }))
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: {
+        padding: 15
+      },
       scales: {
         y: {
           reverse: true,
-          ticks: {callback: v=>isNaN(v)?'':`D${v}`},
-          title: {display:true,text:'Drought Intensity'}
+          ticks: {
+            stepSize: 1,
+            callback: v => (Number.isInteger(v) ? `D${v}` : ''),
+            color: '#ffe8c2',
+            font: { size: 14 }
+          },
+          title: {
+            display: true,
+            text: 'Drought Intensity',
+            color: '#ffe8c2',
+            font: { size: 16, weight: 'bold' }
+          },
+          grid: {
+            color: 'rgba(255,255,255,0.1)'
+          }
         },
-        x: {title:{display:true,text:'Date'}}
+        x: {
+          ticks: {
+            color: '#ffe8c2',
+            font: { size: 12 }
+          },
+          title: {
+            display: true,
+            text: 'Date',
+            color: '#ffe8c2',
+            font: { size: 16, weight: 'bold' }
+          },
+          grid: {
+            color: 'rgba(255,255,255,0.1)'
+          }
+        }
       },
-      plugins:{
-        tooltip:{callbacks:{label:c=>isNaN(c.raw)?'No Data':`D${c.raw}`}}
+      plugins: {
+        legend: {
+          labels: {
+            color: '#ffe8c2',
+            font: { size: 14 }
+          }
+        },
+        tooltip: {
+          backgroundColor: '#390600',
+          titleColor: '#ffe8c2',
+          bodyColor: '#ffe8c2',
+          callbacks: {
+            label: c => isNaN(c.raw) ? 'No Data' : `D${c.raw}`
+          }
+        }
       }
     }
   });
 }
+
+// 🎨 Styled colors matching your site
+function getStyledChartColor(i, opacity = 1) {
+  const colors = ['#F]()
+
 
 // Colors for datasets
 function getChartColor(i,opacity=1){
