@@ -140,3 +140,148 @@ legend.onAdd = function () {
   return div;
 };
 legend.addTo(map);
+
+// --- Counties and Chart Functionality ---
+
+let countiesLayer;
+let countiesVisible = false;
+let selectedCounties = [];
+let droughtChart;
+
+document.getElementById('toggleCounties').addEventListener('click', () => {
+  countiesVisible = !countiesVisible;
+  if (countiesVisible) {
+    loadCountiesLayer();
+  } else if (countiesLayer) {
+    map.removeLayer(countiesLayer);
+    countiesLayer = null;
+  }
+});
+
+function loadCountiesLayer() {
+  fetch('data/enriched_counties.geojson')
+    .then(res => res.json())
+    .then(data => {
+      countiesLayer = L.geoJSON(data, {
+        style: { color: '#000', weight: 1, fillOpacity: 0.1 },
+        onEachFeature: (feature, layer) => {
+          layer.on('click', () => countyClicked(feature, layer));
+        }
+      }).addTo(map);
+    });
+}
+
+function countyClicked(feature, layer) {
+  const countyId = feature.properties.conty_d;
+  const isSelected = selectedCounties.find(c => c.id === countyId);
+
+  if (isSelected) {
+    selectedCounties = selectedCounties.filter(c => c.id !== countyId);
+    layer.setStyle({ fillOpacity: 0.1, fillColor: '#000' });
+  } else {
+    selectedCounties.push({
+      id: countyId,
+      name: feature.properties.NAME,
+      data: getCountyDM(feature)
+    });
+    layer.setStyle({ fillOpacity: 0.6, fillColor: '#00f' });
+  }
+
+  updateChart();
+}
+
+function getCountyDM(feature) {
+  const labels = [];
+  const data = [];
+
+  droughtDates.forEach(date => {
+    const ym = date.slice(0, 6);
+    const dmVal = feature.properties[`DM_${ym}`];
+    labels.push(`${ym.slice(0, 4)}-${ym.slice(4, 6)}`);
+    data.push(dmVal === null ? NaN : Number(dmVal));
+  });
+
+  return { labels, data };
+}
+
+function updateChart() {
+  const ctx = document.getElementById('chartCanvas').getContext('2d');
+  if (droughtChart) droughtChart.destroy();
+
+  if (selectedCounties.length === 0) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    return;
+  }
+
+  droughtChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: selectedCounties[0].data.labels,
+      datasets: selectedCounties.map((county, idx) => ({
+        label: county.name,
+        data: county.data.data,
+        borderColor: getStyledChartColor(idx),
+        backgroundColor: getStyledChartColor(idx, 0.2),
+        spanGaps: true,
+        tension: 0.35,
+        borderWidth: 2,
+        pointRadius: 3
+      }))
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          reverse: true,
+          min: 0,
+          max: 4,
+          ticks: {
+            stepSize: 1,
+            callback: v => Number.isInteger(v) ? `D${v}` : '',
+            color: '#ffe8c2',
+            font: { weight: 'bold' }
+          },
+          title: {
+            display: true,
+            text: 'Drought Intensity',
+            color: '#ffe8c2'
+          },
+          grid: {
+            color: 'rgba(255,255,255,0.1)'
+          }
+        },
+        x: {
+          ticks: { color: '#ffe8c2' },
+          title: {
+            display: true,
+            text: 'Date',
+            color: '#ffe8c2'
+          },
+          grid: {
+            color: 'rgba(255,255,255,0.1)'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: { color: '#ffe8c2' }
+        },
+        tooltip: {
+          backgroundColor: '#390600',
+          titleColor: '#ffe8c2',
+          bodyColor: '#ffe8c2',
+          callbacks: {
+            label: ctx => isNaN(ctx.raw) ? 'No Data' : `D${ctx.raw}`
+          }
+        }
+      }
+    }
+  });
+}
+
+function getStyledChartColor(i, opacity = 1) {
+  const baseColors = ['#F3A365', '#ffe8c2', '#FF0000', '#870000', '#390000', '#FFF500'];
+  const hex = Math.round(opacity * 255).toString(16).padStart(2, '0');
+  return baseColors[i % baseColors.length] + hex;
+}
