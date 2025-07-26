@@ -27,7 +27,7 @@
       color: #ffe8c2;
       max-width: 980px;
       margin: 0 auto;
-      padding: 0 20px 40px; /* removed top padding */
+      padding: 0 20px 40px;
     }
 
     h2 {
@@ -53,31 +53,26 @@
       color: #ffe8c2;
     }
 
-    select {
+    select, button {
       appearance: none;
       background-color: #ffe8c2;
       border: 3px solid #390600;
       border-radius: 12px;
-      padding: 14px 46px 14px 18px;
+      padding: 14px 18px;
       font-size: 1.1rem;
       font-weight: 700;
       color: #222;
       font-family: 'DM Sans', sans-serif;
       cursor: pointer;
       box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-      background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='18' viewBox='0 0 24 24' width='18' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      background-size: 18px;
       transition: all 0.2s ease;
     }
 
-    select:hover {
+    select:hover, button:hover {
       background-color: #F3A365;
-      border-color: #390600;
     }
 
-    select:focus {
+    select:focus, button:focus {
       outline: none;
       border-color: #390600;
       box-shadow: 0 0 0 4px rgba(255, 232, 194, 0.4);
@@ -136,24 +131,21 @@
 
     <label for="monthSelect">Month:</label>
     <select id="monthSelect"></select>
+
+    <button id="toggleCounties">Toggle Counties Layer</button>
   </div>
 
-<div id="controls" style="margin-top:20px; text-align:center;">
-    <button id="toggleCounties" style="padding:12px;font-size:16px;">Toggle Counties Layer</button>
-</div>
-
-<div style="margin-top:30px;">
-    <canvas id="chartCanvas" width="800" height="400"></canvas>
-</div>
-
-  
   <div id="droughtMap"></div>
+
+  <div style="margin-top:30px;">
+    <canvas id="chartCanvas" width="800" height="400"></canvas>
+  </div>
 
   <div class="citation">
     <strong>About the Data</strong><br>
     This interactive map displays drought conditions across the United States for the <strong>first week of each month</strong> from <strong>2020 to present</strong>. The data comes from the <strong>U.S. Drought Monitor</strong>, which classifies drought based on factors such as precipitation, temperature, soil moisture, and streamflow. Categories range from <strong>D0 (Abnormally Dry)</strong> to <strong>D4 (Exceptional Drought)</strong>, capturing both short and long term drought impacts across diverse regions and time periods.
     <br><br>
-    Data source: U.S. Drought Monitor — National Drought Mitigation Center (NDMC), U.S. Department of Agriculture (USDA), and National Oceanic and Atmospheric Administration (NOAA).
+    Data source: U.S. Drought Monitor — National Drought Mitigation Center (NDMC), U.S. Department of Agriculture (USDA), and NOAA.
   </div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
