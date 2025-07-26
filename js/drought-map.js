@@ -276,9 +276,21 @@ function updateChart() {
           }
         }
       }
-    }
+    },
+    plugins: [{
+      id: 'customCanvasBackground',
+      beforeDraw: (chart) => {
+        const ctx = chart.canvas.getContext('2d');
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-over';
+        ctx.fillStyle = '#5a6b4d'; // same as chart div background
+        ctx.fillRect(0, 0, chart.width, chart.height);
+        ctx.restore();
+      }
+    }]
   });
 }
+
 
 function getStyledChartColor(i, opacity = 1) {
   const baseColors = ['#F3A365', '#ffe8c2', '#FF0000', '#870000', '#390000', '#FFF500'];
