@@ -340,3 +340,24 @@ function getStyledChartColor(i, opacity = 1) {
   const [r, g, b] = baseColors[i % baseColors.length];
   return `rgba(${r}, ${g}, ${b})`;
 }
+
+// 🧹 Clear Chart Button
+document.getElementById('clearChartBtn').addEventListener('click', () => {
+  selectedCounties = [];
+
+  if (droughtChart) {
+    droughtChart.destroy();
+    droughtChart = null;
+  }
+
+  if (countiesLayer) {
+    countiesLayer.eachLayer(layer => {
+      layer.setStyle({
+        color: '#114f57',
+        fillColor: '#a9e1e8',
+        weight: 1,
+        fillOpacity: 0.4
+      });
+    });
+  }
+});
