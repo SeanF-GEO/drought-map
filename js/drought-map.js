@@ -42,7 +42,7 @@ let droughtLayer;
 // 🔁 Load and display drought GeoJSON by date
 function loadDroughtByDate(dateStr) {
   if (!droughtDates.includes(dateStr)) {
-    alert('No data for ${dateStr}');
+    alert(`No data for ${dateStr}`);
     return;
   }
 
@@ -50,7 +50,7 @@ function loadDroughtByDate(dateStr) {
     map.removeLayer(droughtLayer);
   }
 
-  fetch('data/USDM_${dateStr}.geojson')
+  fetch(`data/USDM_${dateStr}.geojson`)
     .then(res => res.json())
     .then(data => {
       droughtLayer = L.geoJSON(data, {
@@ -61,7 +61,7 @@ function loadDroughtByDate(dateStr) {
           fillOpacity: 0.7
         }),
         onEachFeature: (f, layer) => {
-          layer.bindPopup('Drought Category: D${f.properties.DM}');
+          layer.bindPopup(`Drought Category: D${f.properties.DM}`);
         }
       }).addTo(map);
     });
@@ -104,11 +104,11 @@ const monthSelect = document.getElementById('monthSelect');
 function handleSelectChange() {
   const year = yearSelect.value;
   const month = monthSelect.value;
-  const match = droughtDates.find(d => d.startsWith('${year}${month}'));
+  const match = droughtDates.find(d => d.startsWith(`${year}${month}`));
   if (match) {
     loadDroughtByDate(match);
   } else {
-    alert('No data found for ${year}-${month}');
+    alert(`No data found for ${year}-${month}`);
   }
 }
 
@@ -134,7 +134,7 @@ legend.onAdd = function () {
   ];
   div.innerHTML = '<b>Drought Intensity</b><br>';
   levels.forEach((d, i) => {
-    div.innerHTML += <i style="background:${getColor(d)}"></i> ${labels[i]}<br>;
+    div.innerHTML += `<i style="background:${getColor(d)}"></i> ${labels[i]}<br>`;
   });
   return div;
 };
@@ -196,9 +196,9 @@ function getCountyDM(feature) {
 
   droughtDates.forEach(date => {
     const ym = date.slice(0, 6);
-    const dmVal = feature.properties['DM_${ym}'];
-    labels.push(${'ym.slice(0, 4)}-${ym.slice(4, 6)}');
-    data.push(dmVal === null ? -1 : Number(dmVal));
+    const dmVal = feature.properties[`DM_${ym}`];
+    labels.push(`${ym.slice(0, 4)}-${ym.slice(4, 6)}`);
+    data.push(dmVal === null ? NaN : Number(dmVal));
   });
 
   return { labels, data };
@@ -208,32 +208,24 @@ function updateChart() {
   const ctx = document.getElementById('chartCanvas').getContext('2d');
   if (droughtChart) droughtChart.destroy();
 
-  const droughtLabels = {
-    '-1': 'No Drought',
-    0: 'D0 (Abnormally Dry)',
-    1: 'D1 (Moderate Drought)',
-    2: 'D2 (Severe Drought)',
-    3: 'D3 (Extreme Drought)',
-    4: 'D4 (Exceptional Drought)'
-  };
+  if (selectedCounties.length === 0) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    return;
+  }
 
   droughtChart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: selectedCounties[0]?.data.labels || [],
-      datasets: selectedCounties.map((county, i) => ({
+      labels: selectedCounties[0].data.labels,
+      datasets: selectedCounties.map((county, idx) => ({
         label: `${county.name} (${county.region})`,
         data: county.data.data,
-        borderColor: getStyledChartColor(i),
-        backgroundColor: getStyledChartColor(i),
-        tension: 0.35,
+        borderColor: getStyledChartColor(idx),
+        backgroundColor: getStyledChartColor(idx),
         spanGaps: true,
+        tension: 0.35,
         borderWidth: 3,
-        pointRadius: 3,
-        segments: {
-          borderDash: ctx =>
-            ctx.p0.parsed.y === -1 || ctx.p1.parsed.y === -1 ? [6, 6] : undefined
-        }
+        pointRadius: 3
       }))
     },
     options: {
@@ -242,15 +234,13 @@ function updateChart() {
       scales: {
         y: {
           reverse: true,
-          min: -1,
+          min: 0,
           max: 4,
           ticks: {
             stepSize: 1,
+            callback: v => Number.isInteger(v) ? `D${v}` : '',
             color: '#435239',
-            font: { size: 14, weight: 'bold' },
-            callback: value => droughtLabels.hasOwnProperty(value)
-              ? droughtLabels[value]
-              : ''
+            font: { size: 16, weight: 'bold' }
           },
           title: {
             display: true,
@@ -258,27 +248,31 @@ function updateChart() {
             color: '#435239',
             font: { size: 18 }
           },
-          grid: { color: '#43523944' }
+          grid: {
+            color: '#43523944'
+          }
         },
         x: {
           ticks: {
             color: '#435239',
-            font: { size: 12 }
+            font: { size: 14 }
           },
           title: {
             display: true,
             text: 'Date',
             color: '#435239',
-            font: { size: 16 }
+            font: { size: 18 }
           },
-          grid: { color: '#43523944' }
+          grid: {
+            color: '#43523944'
+          }
         }
       },
       plugins: {
         legend: {
           labels: {
             color: '#435239',
-            font: { size: 13, weight: 'bold' }
+            font: { size: 14, weight: 'bold' }
           }
         },
         tooltip: {
@@ -286,19 +280,14 @@ function updateChart() {
           titleColor: '#ffe8c2',
           bodyColor: '#ffe8c2',
           callbacks: {
-            label: ctx => {
-              const val = ctx.raw;
-              if (val === -1) return 'No Drought';
-              if (isNaN(val)) return 'No Data';
-              return droughtLabels[val] || `D${val}`;
-            }
+            label: ctx => isNaN(ctx.raw) ? 'No Data' : `D${ctx.raw}`
           }
         }
       }
     },
     plugins: [{
       id: 'customCanvasBackground',
-      beforeDraw: chart => {
+      beforeDraw: (chart) => {
         const ctx = chart.canvas.getContext('2d');
         ctx.save();
         ctx.globalCompositeOperation = 'destination-over';
@@ -309,7 +298,6 @@ function updateChart() {
     }]
   });
 }
-
 
 
 function getStyledChartColor(i, opacity = 1) {
@@ -326,5 +314,5 @@ function getStyledChartColor(i, opacity = 1) {
     [105, 105, 105]  // #696969
   ];
   const [r, g, b] = baseColors[i % baseColors.length];
-  return 'rgba('=${r}, ${g}, ${b})';
+  return `rgba(${r}, ${g}, ${b})`;
 }
