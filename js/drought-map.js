@@ -302,7 +302,19 @@ function updateChart() {
 
 
 function getStyledChartColor(i, opacity = 1) {
-  const baseColors = ['#8B1A1A', '#A0522D', '#B8860B', '#6B8E23', '#228B22', '#008B8B', '#00008B', '#4B0082', '#800080', '#696969'];
-  const hex = Math.round(opacity * 255).toString(16).padStart(2, '0');
-  return baseColors[i % baseColors.length] + hex;
+  const baseColors = [
+    [139, 26, 26],   // #8B1A1A
+    [160, 82, 45],   // #A0522D
+    [184, 134, 11],  // #B8860B
+    [107, 142, 35],  // #6B8E23
+    [34, 139, 34],   // #228B22
+    [0, 139, 139],   // #008B8B
+    [0, 0, 139],     // #00008B
+    [75, 0, 130],    // #4B0082
+    [128, 0, 128],   // #800080
+    [105, 105, 105]  // #696969
+  ];
+  const [r, g, b] = baseColors[i % baseColors.length];
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 }
+
