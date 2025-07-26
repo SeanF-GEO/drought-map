@@ -221,11 +221,14 @@ function updateChart() {
       maintainAspectRatio: false,
       scales: {
         y: {
-          min: 0,
+          min: -1,
           max: 4,
           ticks: {
             stepSize: 1,
-            callback: v => Number.isInteger(v) ? `D${v}` : '',
+callback: v => {
+  if (v === -1) return 'None';
+  return Number.isInteger(v) ? `D${v}` : '';
+}
             color: '#435239',
             font: { size: 16, weight: 'bold' }
           },
@@ -289,7 +292,11 @@ function updateChart() {
         tension: 0.35,
         borderWidth: 3,
         pointRadius: 3
-      }))
+segments: {
+    borderDash: ctx =>
+      ctx.p0.parsed.y === -1 || ctx.p1.parsed.y === -1 ? [6, 6] : undefined
+  }
+}))
     },
     options: {
       responsive: true,
