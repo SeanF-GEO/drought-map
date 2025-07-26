@@ -209,17 +209,13 @@ function getCountyDM(feature) {
 
 function updateChart() {
   const ctx = document.getElementById('chartCanvas').getContext('2d');
-  
+
   if (droughtChart) droughtChart.destroy();
 
   if (selectedCounties.length === 0) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     return;
   }
-
-  // Add a background color to canvas
-  Chart.defaults.color = '#ffe8c2';
-  Chart.defaults.font.family = 'DM Sans';
 
   droughtChart = new Chart(ctx, {
     type: 'line',
@@ -231,48 +227,48 @@ function updateChart() {
         borderColor: getStyledChartColor(idx),
         backgroundColor: getStyledChartColor(idx, 0.4),
         pointBackgroundColor: getStyledChartColor(idx),
+        borderWidth: 3,
         tension: 0.2,
         spanGaps: true,
-        borderWidth: 3,
         pointRadius: 4,
-        pointHoverRadius: 6,
+        pointHoverRadius: 6
       }))
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      layout: {
-        padding: 15
-      },
+      layout: { padding: 10 },
       scales: {
         y: {
           reverse: true,
+          min: 0,
+          max: 4,
           ticks: {
             stepSize: 1,
-            callback: v => (Number.isInteger(v) ? `D${v}` : ''),
+            callback: v => Number.isInteger(v) ? `D${v}` : '',
             color: '#ffe8c2',
-            font: { size: 14 }
+            font: { family: 'DM Sans', size: 14 }
           },
           title: {
             display: true,
             text: 'Drought Intensity',
             color: '#ffe8c2',
-            font: { size: 16, weight: 'bold' }
+            font: { family: 'DM Sans', size: 16, weight: 'bold' }
           },
           grid: {
-            color: 'rgba(255,255,255,0.1)'
+            color: 'rgba(255,255,255,0.2)'
           }
         },
         x: {
           ticks: {
             color: '#ffe8c2',
-            font: { size: 12 }
+            font: { family: 'DM Sans', size: 12 }
           },
           title: {
             display: true,
             text: 'Date',
             color: '#ffe8c2',
-            font: { size: 16, weight: 'bold' }
+            font: { family: 'DM Sans', size: 16, weight: 'bold' }
           },
           grid: {
             color: 'rgba(255,255,255,0.1)'
@@ -283,20 +279,27 @@ function updateChart() {
         legend: {
           labels: {
             color: '#ffe8c2',
-            font: { size: 14 }
+            font: { family: 'DM Sans', size: 14 }
           }
         },
         tooltip: {
           backgroundColor: '#390600',
-          titleColor: '#ffe8c2',
-          bodyColor: '#ffe8c2',
+          titleFont: { family: 'DM Sans', size: 14, weight: 'bold' },
+          bodyFont: { family: 'DM Sans', size: 14 },
           callbacks: {
-            label: c => isNaN(c.raw) ? 'No Data' : `D${c.raw}`
+            label: context => isNaN(context.raw) ? 'No Data' : `D${context.raw}`
           }
         }
       }
     }
   });
+}
+
+
+// Styled Colors Matching Your Buttons/UI
+function getStyledChartColor(i, opacity = 1) {
+  const colors = ['#F3A365', '#FFA500', '#FF0000', '#870000', '#390000', '#ffe8c2'];
+  return colors[i % colors.length] + Math.floor(opacity * 255).toString(16).padStart(2, '0');
 }
 
 // 🎨 Styled colors matching your site
