@@ -338,40 +338,38 @@ segments: {
           }
         }
       },
-      plugins: {
-        legend: {
-          labels: {
-            color: '#435239',
-            font: { size: 14, weight: 'bold' }
-          }
-        },
-        tooltip: {
-          backgroundColor: '#390600',
-          titleColor: '#ffe8c2',
-          bodyColor: '#ffe8c2',
-          callbacks: {
-            label: ctx => {
-  if (ctx.raw === -1) return 'No Drought';
-  if (isNaN(ctx.raw)) return 'No Data';
-  return `D${ctx.raw}`;
-}
-          }
-        }
+plugins: {
+  legend: {
+    labels: {
+      color: '#435239',
+      font: { size: 14, weight: 'bold' }
+    }
+  },
+  tooltip: {
+    backgroundColor: '#390600',
+    titleColor: '#ffe8c2',
+    bodyColor: '#ffe8c2',
+    callbacks: {
+      label: ctx => {
+        if (ctx.raw === -1) return 'No Drought';
+        if (isNaN(ctx.raw)) return 'No Data';
+        return `D${ctx.raw}`;
       }
-    },
-    plugins: [{
-      id: 'customCanvasBackground',
-      beforeDraw: (chart) => {
-        const ctx = chart.canvas.getContext('2d');
-        ctx.save();
-        ctx.globalCompositeOperation = 'destination-over';
-        ctx.fillStyle = '#ffe8c2';
-        ctx.fillRect(0, 0, chart.width, chart.height);
-        ctx.restore();
-      }
-    }]
-  });
-}
+    }
+  }
+},
+plugins: [{
+  id: 'customCanvasBackground',
+  beforeDraw: (chart) => {
+    const ctx = chart.canvas.getContext('2d');
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = '#ffe8c2';
+    ctx.fillRect(0, 0, chart.width, chart.height);
+    ctx.restore();
+  }
+}]
+
 
 
 function getStyledChartColor(i, opacity = 1) {
