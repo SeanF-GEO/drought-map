@@ -238,7 +238,16 @@ function updateChart() {
           max: 4,
           ticks: {
             stepSize: 1,
-            callback: v => Number.isInteger(v) ? `D${v}` : '',
+            callback: v => {
+             const labels = {
+              0: 'D0 (Abnormally Dry)',
+              1: 'D1 (Moderate Drought)',
+              2: 'D2 (Severe Drought)',
+              3: 'D3 (Extreme Drought)',
+              4: 'D4 (Exceptional Drought)'
+              };
+              return labels[v] || '';
+            }
             color: '#435239',
             font: { size: 16, weight: 'bold' }
           },
@@ -280,7 +289,17 @@ function updateChart() {
           titleColor: '#ffe8c2',
           bodyColor: '#ffe8c2',
           callbacks: {
-            label: ctx => isNaN(ctx.raw) ? 'No Data' : `D${ctx.raw}`
+            label: ctx =>{
+              const val = ctx.raw;
+              const labels = {
+                0: 'D0 (Abnormally Dry)',
+                1: 'D1 (Moderate Drought)',
+                2: 'D2 (Severe Drought)',
+                3: 'D3 (Extreme Drought)',
+                4: 'D4 (Exceptional Drought)'
+              };
+              return isNaN(val) ? 'No Data' : labels[val] || `D${val}`;
+            }
           }
         }
       }
