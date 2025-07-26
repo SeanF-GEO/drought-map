@@ -302,7 +302,7 @@ function updateChart() {
 
 
 function getStyledChartColor(i, opacity = 1) {
-  const baseColors = [    '#e6194b', '#f58231', '#ffe119', '#bfef45', '#3cb44b', '#42d4f4', '#4363d8', '#911eb4', '#f032e6', '#a9a9a9'];
+  const baseColors = ['#8B1A1A', '#A0522D', '#B8860B', '#6B8E23', '#228B22', '#008B8B', '#00008B', '#4B0082', '#800080', '#696969'];
   const hex = Math.round(opacity * 255).toString(16).padStart(2, '0');
   return baseColors[i % baseColors.length] + hex;
 }
