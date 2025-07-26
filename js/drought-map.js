@@ -221,8 +221,8 @@ function updateChart() {
       datasets: selectedCounties.map((county, idx) => ({
         label: `${county.name} (${county.region})`,
         data: county.data.data,
-        borderColor: getStyledChartColor(idx),
-        backgroundColor: getStyledChartColor(idx, 0.2),
+        borderColor: getStyledChartColor(idx, 1),
+        backgroundColor: getStyledChartColor(idx, 0.15),
         spanGaps: true,
         tension: 0.35,
         borderWidth: 3,
