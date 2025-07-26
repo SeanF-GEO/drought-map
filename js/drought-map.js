@@ -208,28 +208,49 @@ function updateChart() {
   const ctx = document.getElementById('chartCanvas').getContext('2d');
   if (droughtChart) droughtChart.destroy();
 
- if (selectedCounties.length === 0) {
+  const droughtLabels = {
+    '-1': 'No Drought',
+    0: 'D0 (Abnormally Dry)',
+    1: 'D1 (Moderate Drought)',
+    2: 'D2 (Severe Drought)',
+    3: 'D3 (Extreme Drought)',
+    4: 'D4 (Exceptional Drought)'
+  };
+
   droughtChart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: [],
-      datasets: []
+      labels: selectedCounties[0]?.data.labels || [],
+      datasets: selectedCounties.map((county, i) => ({
+        label: `${county.name} (${county.region})`,
+        data: county.data.data,
+        borderColor: getStyledChartColor(i),
+        backgroundColor: getStyledChartColor(i),
+        tension: 0.35,
+        spanGaps: true,
+        borderWidth: 3,
+        pointRadius: 3,
+        segments: {
+          borderDash: ctx =>
+            ctx.p0.parsed.y === -1 || ctx.p1.parsed.y === -1 ? [6, 6] : undefined
+        }
+      }))
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
         y: {
+          reverse: true,
           min: -1,
           max: 4,
           ticks: {
             stepSize: 1,
-callback: v => {
-  if (v === -1) return 'None';
-  return Number.isInteger(v) ? D${v} : '';
-}
             color: '#435239',
-            font: { size: 16, weight: 'bold' }
+            font: { size: 14, weight: 'bold' },
+            callback: value => droughtLabels.hasOwnProperty(value)
+              ? droughtLabels[value]
+              : ''
           },
           title: {
             display: true,
@@ -237,34 +258,47 @@ callback: v => {
             color: '#435239',
             font: { size: 18 }
           },
-          grid: {
-            color: '#43523944'
-          }
+          grid: { color: '#43523944' }
         },
         x: {
           ticks: {
             color: '#435239',
-            font: { size: 14 }
+            font: { size: 12 }
           },
           title: {
             display: true,
             text: 'Date',
             color: '#435239',
-            font: { size: 18 }
+            font: { size: 16 }
           },
-          grid: {
-            color: '#43523944'
-          }
+          grid: { color: '#43523944' }
         }
       },
       plugins: {
-        legend: { display: false },
-        tooltip: { enabled: false }
+        legend: {
+          labels: {
+            color: '#435239',
+            font: { size: 13, weight: 'bold' }
+          }
+        },
+        tooltip: {
+          backgroundColor: '#390600',
+          titleColor: '#ffe8c2',
+          bodyColor: '#ffe8c2',
+          callbacks: {
+            label: ctx => {
+              const val = ctx.raw;
+              if (val === -1) return 'No Drought';
+              if (isNaN(val)) return 'No Data';
+              return droughtLabels[val] || `D${val}`;
+            }
+          }
+        }
       }
     },
     plugins: [{
       id: 'customCanvasBackground',
-      beforeDraw: (chart) => {
+      beforeDraw: chart => {
         const ctx = chart.canvas.getContext('2d');
         ctx.save();
         ctx.globalCompositeOperation = 'destination-over';
@@ -274,100 +308,7 @@ callback: v => {
       }
     }]
   });
-  return;
 }
-
-
-  droughtChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: selectedCounties[0].data.labels,
-      datasets: selectedCounties.map((county, idx) => ({
-        label: ${county.name} (${county.region}),
-        data: county.data.data,
-        borderColor: getStyledChartColor(idx),
-        backgroundColor: getStyledChartColor(idx),
-        spanGaps: true,
-        tension: 0.35,
-        borderWidth: 3,
-        pointRadius: 3
-segments: {
-    borderDash: ctx =>
-      ctx.p0.parsed.y === -1 || ctx.p1.parsed.y === -1 ? [6, 6] : undefined
-  }
-}))
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          reverse: true,
-          min: 0,
-          max: 4,
-          ticks: {
-            stepSize: 1,
-            callback: v => Number.isInteger(v) ? D${v} : '',
-            color: '#435239',
-            font: { size: 16, weight: 'bold' }
-          },
-          title: {
-            display: true,
-            text: 'Drought Intensity',
-            color: '#435239',
-            font: { size: 18 }
-          },
-          grid: {
-            color: '#43523944'
-          }
-        },
-        x: {
-          ticks: {
-            color: '#435239',
-            font: { size: 14 }
-          },
-          title: {
-            display: true,
-            text: 'Date',
-            color: '#435239',
-            font: { size: 18 }
-          },
-          grid: {
-            color: '#43523944'
-          }
-        }
-      },
-plugins: {
-  legend: {
-    labels: {
-      color: '#435239',
-      font: { size: 14, weight: 'bold' }
-    }
-  },
-  tooltip: {
-    backgroundColor: '#390600',
-    titleColor: '#ffe8c2',
-    bodyColor: '#ffe8c2',
-    callbacks: {
-      label: ctx => {
-        if (ctx.raw === -1) return 'No Drought';
-        if (isNaN(ctx.raw)) return 'No Data';
-        return D${ctx.raw};
-      }
-    }
-  }
-},
-plugins: [{
-  id: 'customCanvasBackground',
-  beforeDraw: (chart) => {
-    const ctx = chart.canvas.getContext('2d');
-    ctx.save();
-    ctx.globalCompositeOperation = 'destination-over';
-    ctx.fillStyle = '#ffe8c2';
-    ctx.fillRect(0, 0, chart.width, chart.height);
-    ctx.restore();
-  }
-}]
 
 
 
