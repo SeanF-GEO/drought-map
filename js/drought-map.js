@@ -199,7 +199,7 @@ function getCountyDM(feature) {
     const ym = date.slice(0, 6);
     const dmVal = feature.properties[`DM_${ym}`];
     labels.push(`${ym.slice(0, 4)}-${ym.slice(4, 6)}`);
-    data.push(dmVal === null ? NaN : Number(dmVal));
+    data.push(dmVal === null ? -1 : Number(dmVal));
   });
 
   return { labels, data };
@@ -343,7 +343,11 @@ function updateChart() {
           titleColor: '#ffe8c2',
           bodyColor: '#ffe8c2',
           callbacks: {
-            label: ctx => isNaN(ctx.raw) ? 'No Data' : `D${ctx.raw}`
+            label: ctx => {
+  if (ctx.raw === -1) return 'No Drought';
+  if (isNaN(ctx.raw)) return 'No Data';
+  return `D${ctx.raw}`;
+}
           }
         }
       }
