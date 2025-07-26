@@ -182,6 +182,7 @@ function countyClicked(feature, layer) {
     selectedCounties.push({
       id: countyId,
       name: feature.properties.NAME,
+      region: feature.properties.REGION || 'Unknown',
       data: getCountyDM(feature)
     });
     layer.setStyle({ fillOpacity: 0.6, fillColor: '#00f' });
@@ -218,7 +219,7 @@ function updateChart() {
     data: {
       labels: selectedCounties[0].data.labels,
       datasets: selectedCounties.map((county, idx) => ({
-        label: county.name,
+        label: `${county.name} (${county.region})`,
         data: county.data.data,
         borderColor: getStyledChartColor(idx),
         backgroundColor: getStyledChartColor(idx, 0.2),
@@ -239,33 +240,41 @@ function updateChart() {
           ticks: {
             stepSize: 1,
             callback: v => Number.isInteger(v) ? `D${v}` : '',
-            color: '#ffe8c2',
-            font: { weight: 'bold' }
+            color: '#435239',
+            font: { size: 16, weight: 'bold' }
           },
           title: {
             display: true,
             text: 'Drought Intensity',
-            color: '#ffe8c2'
+            color: '#435239',
+            font: { size: 18 }
           },
           grid: {
-            color: 'rgba(255,255,255,0.1)'
+            color: '#43523944'
           }
         },
         x: {
-          ticks: { color: '#ffe8c2' },
+          ticks: {
+            color: '#435239',
+            font: { size: 14 }
+          },
           title: {
             display: true,
             text: 'Date',
-            color: '#ffe8c2'
+            color: '#435239',
+            font: { size: 18 }
           },
           grid: {
-            color: 'rgba(255,255,255,0.1)'
+            color: '#43523944'
           }
         }
       },
       plugins: {
         legend: {
-          labels: { color: '#ffe8c2' }
+          labels: {
+            color: '#435239',
+            font: { size: 14, weight: 'bold' }
+          }
         },
         tooltip: {
           backgroundColor: '#390600',
@@ -283,7 +292,7 @@ function updateChart() {
         const ctx = chart.canvas.getContext('2d');
         ctx.save();
         ctx.globalCompositeOperation = 'destination-over';
-        ctx.fillStyle = '#5a6b4d'; // same as chart div background
+        ctx.fillStyle = '#ffe8c2';
         ctx.fillRect(0, 0, chart.width, chart.height);
         ctx.restore();
       }
@@ -293,7 +302,7 @@ function updateChart() {
 
 
 function getStyledChartColor(i, opacity = 1) {
-  const baseColors = ['#F3A365', '#ffe8c2', '#FF0000', '#870000', '#390000', '#FFF500'];
+  const baseColors = [    '#e6194b', '#f58231', '#ffe119', '#bfef45', '#3cb44b', '#42d4f4', '#4363d8', '#911eb4', '#f032e6', '#a9a9a9'];
   const hex = Math.round(opacity * 255).toString(16).padStart(2, '0');
   return baseColors[i % baseColors.length] + hex;
 }
