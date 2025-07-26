@@ -42,7 +42,7 @@ let droughtLayer;
 // 🔁 Load and display drought GeoJSON by date
 function loadDroughtByDate(dateStr) {
   if (!droughtDates.includes(dateStr)) {
-    alert(No data for ${dateStr});
+    alert('No data for ${dateStr}');
     return;
   }
 
@@ -50,7 +50,7 @@ function loadDroughtByDate(dateStr) {
     map.removeLayer(droughtLayer);
   }
 
-  fetch(data/USDM_${dateStr}.geojson)
+  fetch('data/USDM_${dateStr}.geojson')
     .then(res => res.json())
     .then(data => {
       droughtLayer = L.geoJSON(data, {
@@ -61,7 +61,7 @@ function loadDroughtByDate(dateStr) {
           fillOpacity: 0.7
         }),
         onEachFeature: (f, layer) => {
-          layer.bindPopup(Drought Category: D${f.properties.DM});
+          layer.bindPopup('Drought Category: D${f.properties.DM}');
         }
       }).addTo(map);
     });
@@ -104,11 +104,11 @@ const monthSelect = document.getElementById('monthSelect');
 function handleSelectChange() {
   const year = yearSelect.value;
   const month = monthSelect.value;
-  const match = droughtDates.find(d => d.startsWith(${year}${month}));
+  const match = droughtDates.find(d => d.startsWith('${year}${month}'));
   if (match) {
     loadDroughtByDate(match);
   } else {
-    alert(No data found for ${year}-${month});
+    alert('No data found for ${year}-${month}');
   }
 }
 
@@ -196,8 +196,8 @@ function getCountyDM(feature) {
 
   droughtDates.forEach(date => {
     const ym = date.slice(0, 6);
-    const dmVal = feature.properties[DM_${ym}];
-    labels.push(${ym.slice(0, 4)}-${ym.slice(4, 6)});
+    const dmVal = feature.properties['DM_${ym}'];
+    labels.push(${'ym.slice(0, 4)}-${ym.slice(4, 6)}');
     data.push(dmVal === null ? -1 : Number(dmVal));
   });
 
@@ -326,5 +326,5 @@ function getStyledChartColor(i, opacity = 1) {
     [105, 105, 105]  // #696969
   ];
   const [r, g, b] = baseColors[i % baseColors.length];
-  return rgba(${r}, ${g}, ${b});
+  return 'rgba('=${r}, ${g}, ${b})';
 }
