@@ -163,8 +163,8 @@ function loadCountiesLayer() {
     .then(data => {
 countiesLayer = L.geoJSON(data, {
   style: {
-    color: '#006400',       // 🟢 dark green border
-    fillColor: '#90ee90',   // 🟩 light green fill
+    color: '#114f57',       // 🟢 dark green border
+    fillColor: '#a9e1e8',   // 🟩 light green fill
     weight: 1,              // border thickness
     fillOpacity: 0.4        // adjust: 0 = invisible, 1 = solid
   },
