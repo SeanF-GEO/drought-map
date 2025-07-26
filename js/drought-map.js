@@ -315,6 +315,6 @@ function getStyledChartColor(i, opacity = 1) {
     [105, 105, 105]  // #696969
   ];
   const [r, g, b] = baseColors[i % baseColors.length];
-  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  return `rgba(${r}, ${g}, ${b})`;
 }
 
