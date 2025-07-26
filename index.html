@@ -137,27 +137,27 @@
 
   <div id="droughtMap"></div>
 
-<div style="
-  margin-top:30px;
-  background-color:#5a6b4d;
-  border-radius:12px;
-  padding:15px;
-  box-shadow:0 6px 20px rgba(0,0,0,0.25);
-  height:450px;
-">
-  <canvas id="chartCanvas" width="800" height="400"></canvas>
-</div>
-
-
+  <div style="
+    margin-top:30px;
+    background-color:#5a6b4d;
+    border-radius:12px;
+    padding:15px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.25);
+    height:450px;  
+  ">
+    <canvas id="chartCanvas"></canvas>
+  </div>
 
   <div class="citation">
     <strong>About the Data</strong><br>
     This interactive map displays drought conditions across the United States for the <strong>first week of each month</strong> from <strong>2020 to present</strong>. The data comes from the <strong>U.S. Drought Monitor</strong>, which classifies drought based on factors such as precipitation, temperature, soil moisture, and streamflow. Categories range from <strong>D0 (Abnormally Dry)</strong> to <strong>D4 (Exceptional Drought)</strong>, capturing both short and long term drought impacts across diverse regions and time periods.
     <br><br>
-    Data source: U.S. Drought Monitor — National Drought Mitigation Center (NDMC), U.S. Department of Agriculture (USDA), and NOAA.
+    Data source: U.S. Drought Monitor — NDMC, USDA, NOAA.
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="js/drought-map.js"></script>
 </body>
+
 </html>
