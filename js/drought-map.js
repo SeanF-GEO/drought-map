@@ -189,7 +189,7 @@ function countyClicked(feature, layer) {
       region: feature.properties.REGION || 'Unknown',
       data: getCountyDM(feature)
     });
-    layer.setStyle({ fillOpacity: 0.6, fillColor: '#00f' });
+    layer.setStyle({ fillOpacity: 0.8, fillColor: '#228B22' });
   }
 
   updateChart();
