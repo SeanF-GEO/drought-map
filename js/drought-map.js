@@ -1,4 +1,3 @@
-
 const droughtDates = [
   '20200107','20200204','20200303','20200407','20200505','20200602','20200707','20200804','20200901','20201006','20201103','20201201',
   '20210105','20210202','20210302','20210406','20210504','20210601','20210706','20210803','20210907','20211005','20211102','20211207',
@@ -43,7 +42,7 @@ let droughtLayer;
 // 🔁 Load and display drought GeoJSON by date
 function loadDroughtByDate(dateStr) {
   if (!droughtDates.includes(dateStr)) {
-    alert(`No data for ${dateStr}`);
+    alert(No data for ${dateStr});
     return;
   }
 
@@ -51,7 +50,7 @@ function loadDroughtByDate(dateStr) {
     map.removeLayer(droughtLayer);
   }
 
-  fetch(`data/USDM_${dateStr}.geojson`)
+  fetch(data/USDM_${dateStr}.geojson)
     .then(res => res.json())
     .then(data => {
       droughtLayer = L.geoJSON(data, {
@@ -62,7 +61,7 @@ function loadDroughtByDate(dateStr) {
           fillOpacity: 0.7
         }),
         onEachFeature: (f, layer) => {
-          layer.bindPopup(`Drought Category: D${f.properties.DM}`);
+          layer.bindPopup(Drought Category: D${f.properties.DM});
         }
       }).addTo(map);
     });
@@ -105,11 +104,11 @@ const monthSelect = document.getElementById('monthSelect');
 function handleSelectChange() {
   const year = yearSelect.value;
   const month = monthSelect.value;
-  const match = droughtDates.find(d => d.startsWith(`${year}${month}`));
+  const match = droughtDates.find(d => d.startsWith(${year}${month}));
   if (match) {
     loadDroughtByDate(match);
   } else {
-    alert(`No data found for ${year}-${month}`);
+    alert(No data found for ${year}-${month});
   }
 }
 
@@ -135,7 +134,7 @@ legend.onAdd = function () {
   ];
   div.innerHTML = '<b>Drought Intensity</b><br>';
   levels.forEach((d, i) => {
-    div.innerHTML += `<i style="background:${getColor(d)}"></i> ${labels[i]}<br>`;
+    div.innerHTML += <i style="background:${getColor(d)}"></i> ${labels[i]}<br>;
   });
   return div;
 };
@@ -197,8 +196,8 @@ function getCountyDM(feature) {
 
   droughtDates.forEach(date => {
     const ym = date.slice(0, 6);
-    const dmVal = feature.properties[`DM_${ym}`];
-    labels.push(`${ym.slice(0, 4)}-${ym.slice(4, 6)}`);
+    const dmVal = feature.properties[DM_${ym}];
+    labels.push(${ym.slice(0, 4)}-${ym.slice(4, 6)});
     data.push(dmVal === null ? -1 : Number(dmVal));
   });
 
@@ -227,7 +226,7 @@ function updateChart() {
             stepSize: 1,
 callback: v => {
   if (v === -1) return 'None';
-  return Number.isInteger(v) ? `D${v}` : '';
+  return Number.isInteger(v) ? D${v} : '';
 }
             color: '#435239',
             font: { size: 16, weight: 'bold' }
@@ -284,7 +283,7 @@ callback: v => {
     data: {
       labels: selectedCounties[0].data.labels,
       datasets: selectedCounties.map((county, idx) => ({
-        label: `${county.name} (${county.region})`,
+        label: ${county.name} (${county.region}),
         data: county.data.data,
         borderColor: getStyledChartColor(idx),
         backgroundColor: getStyledChartColor(idx),
@@ -308,17 +307,7 @@ segments: {
           max: 4,
           ticks: {
             stepSize: 1,
-callback: v => {
-  const labels = {
-    '-1': 'No Drought',
-    0: 'D0 (Abnormally Dry)',
-    1: 'D1 (Moderate Drought)',
-    2: 'D2 (Severe Drought)',
-    3: 'D3 (Extreme Drought)',
-    4: 'D4 (Exceptional Drought)'
-  };
-  return labels[v] || '';
-}
+            callback: v => Number.isInteger(v) ? D${v} : '',
             color: '#435239',
             font: { size: 16, weight: 'bold' }
           },
@@ -361,18 +350,10 @@ plugins: {
     bodyColor: '#ffe8c2',
     callbacks: {
       label: ctx => {
-  const val = ctx.raw;
-  const labels = {
-    '-1': 'No Drought',
-    0: 'D0 (Abnormally Dry)',
-    1: 'D1 (Moderate Drought)',
-    2: 'D2 (Severe Drought)',
-    3: 'D3 (Extreme Drought)',
-    4: 'D4 (Exceptional Drought)'
-  };
-  return labels[val] || 'No Data';
-}
-
+        if (ctx.raw === -1) return 'No Drought';
+        if (isNaN(ctx.raw)) return 'No Data';
+        return D${ctx.raw};
+      }
     }
   }
 },
@@ -404,6 +385,5 @@ function getStyledChartColor(i, opacity = 1) {
     [105, 105, 105]  // #696969
   ];
   const [r, g, b] = baseColors[i % baseColors.length];
-  return `rgba(${r}, ${g}, ${b})`;
+  return rgba(${r}, ${g}, ${b});
 }
-
