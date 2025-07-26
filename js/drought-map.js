@@ -161,12 +161,17 @@ function loadCountiesLayer() {
   fetch('data/enriched_counties.geojson')
     .then(res => res.json())
     .then(data => {
-      countiesLayer = L.geoJSON(data, {
-        style: { color: '#000', weight: 1, fillOpacity: 0.1 },
-        onEachFeature: (feature, layer) => {
-          layer.on('click', () => countyClicked(feature, layer));
-        }
-      }).addTo(map);
+countiesLayer = L.geoJSON(data, {
+  style: {
+    color: '#006400',       // 🟢 dark green border
+    fillColor: '#90ee90',   // 🟩 light green fill
+    weight: 1,              // border thickness
+    fillOpacity: 0.4        // adjust: 0 = invisible, 1 = solid
+  },
+  onEachFeature: (feature, layer) => {
+    layer.on('click', () => countyClicked(feature, layer));
+  }
+}).addTo(map);
     });
 }
 
