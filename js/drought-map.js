@@ -308,7 +308,17 @@ segments: {
           max: 4,
           ticks: {
             stepSize: 1,
-            callback: v => Number.isInteger(v) ? `D${v}` : '',
+callback: v => {
+  const labels = {
+    '-1': 'No Drought',
+    0: 'D0 (Abnormally Dry)',
+    1: 'D1 (Moderate Drought)',
+    2: 'D2 (Severe Drought)',
+    3: 'D3 (Extreme Drought)',
+    4: 'D4 (Exceptional Drought)'
+  };
+  return labels[v] || '';
+}
             color: '#435239',
             font: { size: 16, weight: 'bold' }
           },
@@ -351,10 +361,18 @@ plugins: {
     bodyColor: '#ffe8c2',
     callbacks: {
       label: ctx => {
-        if (ctx.raw === -1) return 'No Drought';
-        if (isNaN(ctx.raw)) return 'No Data';
-        return `D${ctx.raw}`;
-      }
+  const val = ctx.raw;
+  const labels = {
+    '-1': 'No Drought',
+    0: 'D0 (Abnormally Dry)',
+    1: 'D1 (Moderate Drought)',
+    2: 'D2 (Severe Drought)',
+    3: 'D3 (Extreme Drought)',
+    4: 'D4 (Exceptional Drought)'
+  };
+  return labels[val] || 'No Data';
+}
+
     }
   }
 },
