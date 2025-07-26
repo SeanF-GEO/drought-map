@@ -247,7 +247,7 @@ function updateChart() {
               4: 'D4 (Exceptional Drought)'
               };
               return labels[v] || '';
-            }
+            },
             color: '#435239',
             font: { size: 16, weight: 'bold' }
           },
